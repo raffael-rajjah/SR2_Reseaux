@@ -18,8 +18,7 @@
 int main(int argc, char* argv[])
 {
     unsigned char message[MAX_INFO]; /* message pour l'application */
-    paquet_t paquet; /* paquet utilisé par le protocole */
-    paquet_t pack;
+    paquet_t paquet, pack; /* paquet utilisé par le protocole */
     int fin = 0; /* condition d'arrêt */
 
     init_reseau(RECEPTION);
@@ -32,18 +31,14 @@ int main(int argc, char* argv[])
 
         // attendre(); /* optionnel ici car de_reseau() fct bloquante */
         de_reseau(&paquet);
-
-
-        pack.type = NACK;
-
-        while(!verifier_controle(paquet)){
+        pack.type = 0;
+        while(!verifier_controle(paquet))
+        {
             vers_reseau(&pack);
             de_reseau(&paquet);
         }
-
-        pack.type = ACK;
+        pack.type = 1;
         vers_reseau(&pack);
-        
 
         /* extraction des donnees du paquet recu */
         for (int i=0; i<paquet.lg_info; i++) {

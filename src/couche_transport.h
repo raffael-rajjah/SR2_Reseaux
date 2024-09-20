@@ -43,5 +43,6 @@ typedef struct paquet_s {
 int dans_fenetre(unsigned int inf, unsigned int pointeur, int taille);
 
 uint8_t generer_controle(paquet_t);
-
+uint8_t verifier_controle(paquet_t);
+int inc(int num, int mod);
 #endif

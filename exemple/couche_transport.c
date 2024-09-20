@@ -41,7 +41,3 @@ uint8_t verifier_controle(paquet_t paquet)
 {
     return generer_controle(paquet) == paquet.somme_ctrl;
 }
-
-int inc(int num, int mod){
-    return (num + 1) % mod;
-}

@@ -20,9 +20,14 @@ int main(int argc, char* argv[])
     unsigned char message[MAX_INFO]; /* message de l'application */
     int taille_msg; /* taille du message */
     int prochain_paquet = 0;
+    int evt; // evenement
 
     paquet_t paquet; /* paquet utilisé par le protocole */
     paquet_t pack; 
+
+
+
+
 
     init_reseau(EMISSION);
 
@@ -47,14 +52,18 @@ int main(int argc, char* argv[])
         /* remise à la couche reseau */
         vers_reseau(&paquet);
 
-        de_reseau(&pack);
+        depart_temporisateur(100);
+        evt = attendre();
 
-        while (pack.type != ACK){
+        while (evt != PAQUET_RECU){
             vers_reseau(&paquet);
-
-            de_reseau(&pack);
+            depart_temporisateur(100);
+            evt = attendre();
         }
-        
+
+        de_reseau(&pack);
+        arret_temporisateur();
+        prochain_paquet = inc(prochain_paquet, 2);
 
         /* lecture des donnees suivantes de la couche application */
         de_application(message, &taille_msg);

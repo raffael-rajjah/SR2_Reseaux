@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
         pack.type = NACK;
 
         while(!verifier_controle(paquet)){
-            vers_reseau(&pack);
+            // vers_reseau(&pack);
             de_reseau(&paquet);
         }
 

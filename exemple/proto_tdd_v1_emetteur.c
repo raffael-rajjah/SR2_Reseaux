@@ -20,9 +20,7 @@ int main(int argc, char* argv[])
     unsigned char message[MAX_INFO]; /* message de l'application */
     int taille_msg; /* taille du message */
     int prochain_paquet = 0;
-
-    paquet_t paquet; /* paquet utilisé par le protocole */
-    paquet_t pack; 
+    paquet_t paquet, pack; /* paquet utilisé par le protocole */
 
     init_reseau(EMISSION);
 
@@ -39,7 +37,8 @@ int main(int argc, char* argv[])
         for (int i=0; i<taille_msg; i++) {
             paquet.info[i] = message[i];
         }
-        paquet.lg_info = taille_msg;  
+        
+        paquet.lg_info = taille_msg;
         paquet.type = DATA;
         paquet.num_seq = prochain_paquet;
         paquet.somme_ctrl = generer_controle(paquet);
@@ -47,14 +46,17 @@ int main(int argc, char* argv[])
         /* remise à la couche reseau */
         vers_reseau(&paquet);
 
+        // attente accusé de reception
         de_reseau(&pack);
 
-        while (pack.type != ACK){
+        while(!pack.type)
+        {
+            /* remise à la couche reseau */
             vers_reseau(&paquet);
 
+            // attente accusé de reception
             de_reseau(&pack);
         }
-        
 
         /* lecture des donnees suivantes de la couche application */
         de_application(message, &taille_msg);
@@ -62,5 +64,4 @@ int main(int argc, char* argv[])
 
     printf("[TRP] Fin execution protocole transfert de donnees (TDD).\n");
     return 0;
-
 }
